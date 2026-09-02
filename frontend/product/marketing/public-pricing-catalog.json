@@ -1,0 +1,458 @@
+{
+  "publicPricingCatalog": {
+    "version": 1,
+    "source": "repo_catalog_fallback",
+    "lifecycleState": "published",
+    "defaultBillingPeriod": "monthly",
+    "billingPeriods": [
+      {
+        "key": "monthly",
+        "label": "Monthly",
+        "shortLabel": "Monthly",
+        "months": 1,
+        "discountPercent": 0,
+        "helper": "Pay month to month"
+      },
+      {
+        "key": "quarterly",
+        "label": "3 months",
+        "shortLabel": "3 mo",
+        "months": 3,
+        "discountPercent": 5,
+        "helper": "Save 5%"
+      },
+      {
+        "key": "six_months",
+        "label": "6 months",
+        "shortLabel": "6 mo",
+        "months": 6,
+        "discountPercent": 10,
+        "helper": "Save 10%"
+      },
+      {
+        "key": "yearly",
+        "label": "Yearly",
+        "shortLabel": "Yearly",
+        "months": 12,
+        "discountPercent": 16.67,
+        "helper": "Roughly two months included"
+      }
+    ],
+    "booster": {
+      "label": "+50% limits",
+      "shortLabel": "Limit boost",
+      "description": "Adds 1.5x operating limits to eligible paid plans without turning the account into the next tier.",
+      "priceMultiplier": 1.25,
+      "limitMultiplier": 1.5
+    },
+    "tiers": [
+      {
+        "key": "open_source",
+        "sortOrder": 60,
+        "name": "Community",
+        "shortName": "Community",
+        "eyebrow": "Self-hosted",
+        "description": "Run the Community reference deployment in infrastructure your team controls.",
+        "monthlyPriceCents": null,
+        "priceNote": "No Nanami Cloud subscription",
+        "billingNote": "Your team operates and maintains the deployment.",
+        "cta": {
+          "kind": "docs_self_hosted",
+          "label": "Read guide",
+          "external": true
+        },
+        "sourceOfferKey": "community",
+        "entitlementPlanKey": "community",
+        "availabilityOfferKey": "community",
+        "runtimeLifecycleOfferKey": "community",
+        "operatingModel": "Operated by your team",
+        "supportModel": "Documentation",
+        "features": [
+          "Community reference deployment",
+          "Self-hosted security checklist",
+          "Core Nanami capabilities",
+          "Team-managed upgrades"
+        ],
+        "metrics": [
+          {
+            "label": "Operation",
+            "value": "Your team"
+          },
+          {
+            "label": "Guidance",
+            "value": "Documentation"
+          }
+        ],
+        "visibility": "public",
+        "lifecycleState": "published"
+      },
+      {
+        "key": "free",
+        "sortOrder": 10,
+        "name": "Free",
+        "shortName": "Free",
+        "eyebrow": "Nanami Cloud",
+        "description": "Create a managed Nanami workspace and make the first private connections.",
+        "monthlyPriceCents": 0,
+        "priceNote": "Free",
+        "billingNote": "Available immediately.",
+        "cta": {
+          "kind": "signup",
+          "label": "Get Started",
+          "external": true
+        },
+        "sourceOfferKey": "saas_enterprise",
+        "entitlementPlanKey": "free",
+        "availabilityOfferKey": "saas_enterprise",
+        "runtimeLifecycleOfferKey": "saas_enterprise",
+        "operatingModel": "Managed by Nanami",
+        "supportModel": "Standard support",
+        "features": [
+          "Managed Cloud workspace",
+          "Access policies and groups",
+          "Network visibility"
+        ],
+        "metrics": [
+          {
+            "label": "Users",
+            "value": "Up to 5"
+          },
+          {
+            "label": "Devices",
+            "value": "Up to 25"
+          }
+        ],
+        "visibility": "public",
+        "lifecycleState": "published"
+      },
+      {
+        "key": "starter",
+        "sortOrder": 20,
+        "name": "Starter",
+        "shortName": "Starter",
+        "eyebrow": "Small teams",
+        "description": "For small teams moving day-to-day private access into Nanami Cloud.",
+        "monthlyPriceCents": 1000,
+        "priceNote": "$10 per month",
+        "billingNote": "Paid activation is assisted.",
+        "cta": {
+          "kind": "signup",
+          "label": "Choose Starter",
+          "external": true
+        },
+        "sourceOfferKey": "saas_enterprise",
+        "entitlementPlanKey": "saas_enterprise",
+        "availabilityOfferKey": "saas_enterprise",
+        "runtimeLifecycleOfferKey": "saas_enterprise",
+        "operatingModel": "Managed by Nanami",
+        "supportModel": "Standard rollout support",
+        "boosterEligible": true,
+        "features": [
+          "Managed Cloud workspace",
+          "Access policies and groups",
+          "Network visibility",
+          "Standard rollout support"
+        ],
+        "metrics": [
+          {
+            "label": "Users",
+            "value": "25",
+            "boostedValue": "38"
+          },
+          {
+            "label": "Devices",
+            "value": "250",
+            "boostedValue": "375"
+          }
+        ],
+        "visibility": "public",
+        "lifecycleState": "published"
+      },
+      {
+        "key": "team",
+        "sortOrder": 30,
+        "name": "Team",
+        "shortName": "Team",
+        "eyebrow": "Growing teams",
+        "description": "For growing teams that need more capacity and rollout support.",
+        "monthlyPriceCents": 2000,
+        "priceNote": "$20 per month",
+        "billingNote": "Paid activation is assisted.",
+        "cta": {
+          "kind": "signup",
+          "label": "Choose Team",
+          "external": true
+        },
+        "badge": "Recommended",
+        "recommended": true,
+        "sourceOfferKey": "saas_enterprise",
+        "entitlementPlanKey": "saas_enterprise",
+        "availabilityOfferKey": "saas_enterprise",
+        "runtimeLifecycleOfferKey": "saas_enterprise",
+        "operatingModel": "Managed by Nanami",
+        "supportModel": "Priority rollout review",
+        "boosterEligible": true,
+        "features": [
+          "Managed Cloud workspace",
+          "Access policies and groups",
+          "Network visibility",
+          "Priority rollout review"
+        ],
+        "metrics": [
+          {
+            "label": "Users",
+            "value": "100",
+            "boostedValue": "150"
+          },
+          {
+            "label": "Devices",
+            "value": "1,000",
+            "boostedValue": "1,500"
+          }
+        ],
+        "visibility": "public",
+        "lifecycleState": "published"
+      },
+      {
+        "key": "scale",
+        "sortOrder": 40,
+        "name": "Scale",
+        "shortName": "Scale",
+        "eyebrow": "Larger deployments",
+        "description": "For larger hosted deployments that need significantly higher limits.",
+        "monthlyPriceCents": 10000,
+        "priceNote": "$100 per month",
+        "billingNote": "Paid activation is assisted.",
+        "cta": {
+          "kind": "signup",
+          "label": "Choose Scale",
+          "external": true
+        },
+        "sourceOfferKey": "saas_enterprise",
+        "entitlementPlanKey": "saas_enterprise",
+        "availabilityOfferKey": "saas_enterprise",
+        "runtimeLifecycleOfferKey": "saas_enterprise",
+        "operatingModel": "Managed by Nanami",
+        "supportModel": "Deployment planning review",
+        "boosterEligible": true,
+        "features": [
+          "Managed Cloud workspace",
+          "High user and device limits",
+          "Network visibility",
+          "Deployment planning review"
+        ],
+        "metrics": [
+          {
+            "label": "Users",
+            "value": "500",
+            "boostedValue": "750"
+          },
+          {
+            "label": "Devices",
+            "value": "5,000",
+            "boostedValue": "7,500"
+          }
+        ],
+        "visibility": "public",
+        "lifecycleState": "published"
+      },
+      {
+        "key": "enterprise",
+        "sortOrder": 50,
+        "name": "Enterprise",
+        "shortName": "Enterprise",
+        "eyebrow": "Custom requirements",
+        "description": "For custom scale, migration, security review, support, and deployment requirements.",
+        "monthlyPriceCents": null,
+        "priceNote": "Custom",
+        "billingNote": "Pricing and activation are agreed with the Nanami team.",
+        "cta": {
+          "kind": "contact",
+          "label": "Talk to us"
+        },
+        "sourceOfferKey": "saas_enterprise",
+        "entitlementPlanKey": "saas_enterprise",
+        "availabilityOfferKey": "saas_enterprise",
+        "runtimeLifecycleOfferKey": "saas_enterprise",
+        "operatingModel": "Managed Cloud by agreement",
+        "supportModel": "Custom support agreement",
+        "features": [
+          "Architecture and trust review",
+          "Migration planning",
+          "Custom support discussion",
+          "Deployment requirements review"
+        ],
+        "metrics": [
+          {
+            "label": "Users",
+            "value": "Custom"
+          },
+          {
+            "label": "Devices",
+            "value": "Custom"
+          }
+        ],
+        "visibility": "public",
+        "lifecycleState": "published"
+      }
+    ],
+    "comparisonGroups": [
+      {
+        "title": "Commercial path",
+        "rows": [
+          {
+            "feature": "Primary use",
+            "values": {
+              "open_source": "Self-hosted evaluation",
+              "free": "Self-serve Free",
+              "starter": "Small hosted team",
+              "team": "Recommended rollout",
+              "scale": "Large hosted rollout",
+              "enterprise": "Custom planning"
+            }
+          },
+          {
+            "feature": "Availability",
+            "help": "How each option can be started today.",
+            "values": {
+              "open_source": "Use the authorized source or release-package path",
+              "free": "Available immediately",
+              "starter": "Assisted activation",
+              "team": "Assisted activation",
+              "scale": "Assisted activation",
+              "enterprise": "Contact Nanami"
+            }
+          },
+          {
+            "feature": "Activation",
+            "values": {
+              "open_source": "No billing",
+              "free": "Free immediately",
+              "starter": "With the Nanami team",
+              "team": "With the Nanami team",
+              "scale": "With the Nanami team",
+              "enterprise": "By agreement"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Limits",
+        "rows": [
+          {
+            "feature": "Users",
+            "values": {
+              "open_source": "Operator-managed",
+              "free": "5",
+              "starter": "25",
+              "team": "100",
+              "scale": "500",
+              "enterprise": "Custom"
+            }
+          },
+          {
+            "feature": "Devices",
+            "values": {
+              "open_source": "Operator-managed",
+              "free": "25",
+              "starter": "250",
+              "team": "1,000",
+              "scale": "5,000",
+              "enterprise": "Custom"
+            }
+          },
+          {
+            "feature": "+50% limits option",
+            "help": "Available for eligible paid Cloud plans by agreement.",
+            "values": {
+              "open_source": false,
+              "free": false,
+              "starter": true,
+              "team": true,
+              "scale": true,
+              "enterprise": "Custom"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Deployment and support",
+        "rows": [
+          {
+            "feature": "Operated by",
+            "values": {
+              "open_source": "Customer",
+              "free": "Nanami",
+              "starter": "Nanami",
+              "team": "Nanami",
+              "scale": "Nanami",
+              "enterprise": "By agreement"
+            }
+          },
+          {
+            "feature": "Service model",
+            "values": {
+              "open_source": "Self-hosted with documentation",
+              "free": "Managed Nanami Cloud",
+              "starter": "Managed Nanami Cloud",
+              "team": "Managed Nanami Cloud",
+              "scale": "Managed Nanami Cloud",
+              "enterprise": "Managed Cloud by agreement"
+            }
+          },
+          {
+            "feature": "Plan changes",
+            "values": {
+              "open_source": "Docs-only",
+              "free": "Talk to Nanami",
+              "starter": "Talk to Nanami",
+              "team": "Talk to Nanami",
+              "scale": "Talk to Nanami",
+              "enterprise": "Commercial review"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Product coverage",
+        "rows": [
+          {
+            "feature": "Role and group governance",
+            "values": {
+              "open_source": true,
+              "free": true,
+              "starter": true,
+              "team": true,
+              "scale": true,
+              "enterprise": true
+            }
+          },
+          {
+            "feature": "Network maps",
+            "values": {
+              "open_source": true,
+              "free": "Evaluation",
+              "starter": true,
+              "team": true,
+              "scale": true,
+              "enterprise": true
+            }
+          },
+          {
+            "feature": "Architecture review",
+            "values": {
+              "open_source": "Docs",
+              "free": "Evaluation",
+              "starter": "Standard",
+              "team": "Priority",
+              "scale": "Priority",
+              "enterprise": "Custom"
+            }
+          }
+        ]
+      }
+    ],
+    "legalNote": "Free workspaces are available immediately. Paid Cloud plans are activated with the Nanami team while online billing is being completed.",
+    "dynamicReadinessNote": "Prices and limits are loaded from the published Nanami plan catalog."
+  }
+}

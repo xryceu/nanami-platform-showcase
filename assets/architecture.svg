@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">
+  <title id="title">Nanami runtime architecture</title>
+  <desc id="description">Browser, native client, and operator traffic converge on the control plane. Desired state flows through gateway manager to gateway daemon and private resources.</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b949e"/>
+    </marker>
+    <style>
+      .title { font: 700 34px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #f0f6fc; }
+      .subtitle { font: 400 17px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #8b949e; }
+      .label { font: 700 20px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #f0f6fc; }
+      .detail { font: 400 15px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #b1bac4; }
+      .edge-label { font: 600 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #8b949e; }
+      .edge { fill: none; stroke: #8b949e; stroke-width: 3; marker-end: url(#arrow); }
+      .boundary { fill: none; stroke: #30363d; stroke-width: 2; stroke-dasharray: 9 9; }
+      .client { fill: #12263a; stroke: #2f81f7; stroke-width: 2; }
+      .bff { fill: #172d25; stroke: #3fb950; stroke-width: 2; }
+      .authority { fill: #2b203f; stroke: #a371f7; stroke-width: 2.5; }
+      .data { fill: #30261a; stroke: #d29922; stroke-width: 2; }
+      .runtime { fill: #24292f; stroke: #8c959f; stroke-width: 2; }
+      .network { fill: #2b1d24; stroke: #f85149; stroke-width: 2; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" rx="24" fill="#0d1117"/>
+  <text x="64" y="68" class="title">Nanami runtime architecture</text>
+  <text x="64" y="101" class="subtitle">Policy authority stays separate from runtime application and observed state.</text>
+
+  <rect x="40" y="130" width="650" height="530" rx="22" class="boundary"/>
+  <text x="64" y="163" class="edge-label">USER AND OPERATOR SURFACES</text>
+
+  <rect x="80" y="200" width="230" height="104" rx="16" class="client"/>
+  <text x="105" y="240" class="label">Browser</text>
+  <text x="105" y="270" class="detail">Tenant workspace</text>
+
+  <rect x="400" y="200" width="250" height="104" rx="16" class="bff"/>
+  <text x="425" y="240" class="label">Client App</text>
+  <text x="425" y="270" class="detail">Next.js SSR / BFF</text>
+
+  <rect x="80" y="365" width="230" height="104" rx="16" class="client"/>
+  <text x="105" y="405" class="label">Native clients</text>
+  <text x="105" y="435" class="detail">CLI · Desktop · Mobile</text>
+
+  <rect x="80" y="530" width="230" height="104" rx="16" class="client"/>
+  <text x="105" y="570" class="label">Operator</text>
+  <text x="105" y="600" class="detail">Internal platform role</text>
+
+  <rect x="400" y="530" width="250" height="104" rx="16" class="bff"/>
+  <text x="425" y="570" class="label">Company Dashboard</text>
+  <text x="425" y="600" class="detail">Internal SSR / BFF</text>
+
+  <rect x="760" y="275" width="310" height="170" rx="18" class="authority"/>
+  <text x="790" y="323" class="label">Control Plane</text>
+  <text x="790" y="354" class="detail">Identity · tenancy · RBAC</text>
+  <text x="790" y="380" class="detail">Policy · desired state · audit</text>
+  <text x="790" y="406" class="detail">Observed state · diagnostics</text>
+
+  <rect x="1190" y="300" width="250" height="120" rx="16" class="data"/>
+  <text x="1220" y="348" class="label">PostgreSQL</text>
+  <text x="1220" y="380" class="detail">Authoritative data</text>
+
+  <rect x="760" y="540" width="310" height="120" rx="16" class="runtime"/>
+  <text x="790" y="588" class="label">Gateway Manager</text>
+  <text x="790" y="620" class="detail">Poll · fan-out · aggregate</text>
+
+  <rect x="760" y="720" width="310" height="120" rx="16" class="runtime"/>
+  <text x="790" y="768" class="label">Gateway Daemon</text>
+  <text x="790" y="800" class="detail">WireGuard · routes · ACL · NAT</text>
+
+  <rect x="1190" y="720" width="250" height="120" rx="16" class="network"/>
+  <text x="1220" y="768" class="label">Private resources</text>
+  <text x="1220" y="800" class="detail">Services and networks</text>
+
+  <path d="M310 252 H400" class="edge"/>
+  <text x="334" y="237" class="edge-label">HTTPS</text>
+
+  <path d="M650 252 H705 V310 H760" class="edge"/>
+  <text x="672" y="237" class="edge-label">scoped API</text>
+
+  <path d="M310 417 H760" class="edge"/>
+  <text x="445" y="402" class="edge-label">authenticated API</text>
+
+  <path d="M310 582 H400" class="edge"/>
+  <path d="M650 582 H705 V410 H760" class="edge"/>
+  <text x="664" y="566" class="edge-label">operator API</text>
+
+  <path d="M1070 360 H1190" class="edge"/>
+  <text x="1100" y="343" class="edge-label">SQL</text>
+
+  <path d="M915 445 V540" class="edge"/>
+  <text x="936" y="500" class="edge-label">desired state · mTLS</text>
+
+  <path d="M915 660 V720" class="edge"/>
+  <text x="936" y="696" class="edge-label">heartbeat / config</text>
+
+  <path d="M1070 780 H1190" class="edge"/>
+  <text x="1092" y="762" class="edge-label">dataplane</text>
+
+  <path d="M795 720 V690 H700 V445 H760" class="edge"/>
+  <text x="512" y="690" class="edge-label">observed state · mTLS</text>
+
+  <rect x="1190" y="520" width="250" height="112" rx="14" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+  <text x="1216" y="555" class="edge-label">TRUST BOUNDARIES</text>
+  <circle cx="1222" cy="580" r="6" fill="#3fb950"/>
+  <text x="1240" y="586" class="detail">Browser via BFF</text>
+  <circle cx="1222" cy="609" r="6" fill="#a371f7"/>
+  <text x="1240" y="615" class="detail">Runtime via mTLS</text>
+</svg>

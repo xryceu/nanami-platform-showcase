@@ -1,0 +1,355 @@
+{
+  "version": "2026-05-08",
+  "categories": [
+    {
+      "id": "auth-session",
+      "label": "Auth and session",
+      "description": "Identity, MFA, stale-cookie recovery, and session issuance failures.",
+      "defaultSeverity": "critical",
+      "primaryOwner": "Security / Identity",
+      "audience": "both",
+      "sources": ["control-plane", "dashboard", "audit"],
+      "relatedCodes": [
+        "audit_error_spike:auth",
+        "status_source_failed",
+        "mfa_challenge_failed"
+      ],
+      "symptoms": [
+        "Users cannot complete login, MFA, recovery, or refresh.",
+        "Audit shows repeated auth/session failures for the same workspace or actor."
+      ],
+      "firstChecks": [
+        "Review failed auth audit events filtered by result and action.",
+        "Confirm MFA policy, session lifecycle, and proxy/BFF auth recovery are healthy.",
+        "Check whether the issue is isolated to one workspace, provider, browser, or region."
+      ],
+      "remediation": [
+        "Keep session validation fail-closed while restoring the failing auth dependency.",
+        "Use support-read context only when the workspace owner explicitly needs investigation support.",
+        "Escalate to Security / Identity before changing MFA or session policy defaults."
+      ],
+      "evidence": [
+        "Failed auth audit events with request IDs and actor context.",
+        "Session lifecycle guard output and proxy/BFF auth recovery traces.",
+        "User-reported browser, workspace, and timestamp."
+      ],
+      "userMessageGuidance": "Acknowledge sign-in or verification trouble without exposing policy internals, secrets, provider errors, or session identifiers."
+    },
+    {
+      "id": "gateway-runtime",
+      "label": "Gateway runtime",
+      "description": "Gateway-daemon heartbeat, WireGuard readiness, endpoint reachability, and host runtime issues.",
+      "defaultSeverity": "critical",
+      "primaryOwner": "Runtime / Networking",
+      "audience": "both",
+      "sources": ["gateway", "gateway-manager"],
+      "relatedCodes": [
+        "gateway_down",
+        "gateway_degraded",
+        "no_gateway_available",
+        "ip_forward_disabled",
+        "wg_listen_port_mismatch",
+        "wg_observed_port_unknown",
+        "gateway_unreachable"
+      ],
+      "symptoms": [
+        "Gateway health is down or degraded.",
+        "WireGuard config readiness cannot find an eligible healthy gateway."
+      ],
+      "firstChecks": [
+        "Open Gateways and inspect heartbeat, endpoint, observed port, and runtime reasons.",
+        "Confirm gateway-daemon has host networking, NET_ADMIN, and WireGuard interface visibility.",
+        "Check gateway-manager desired-state delivery and last apply result."
+      ],
+      "remediation": [
+        "Restore gateway-daemon host prerequisites and connectivity.",
+        "Reconcile configured vs observed WireGuard port before retrying runtime apply.",
+        "Keep customer-facing status scoped to affected gateway or region."
+      ],
+      "evidence": [
+        "Gateway ID, region, endpoint posture, and lastSeen timestamp.",
+        "Gateway-daemon logs and observed runtime state.",
+        "Rejected gateway reasons from status incident details."
+      ],
+      "userMessageGuidance": "State that a gateway path is degraded or unavailable; do not expose host commands, internal topology, or unrelated tenant details."
+    },
+    {
+      "id": "route-path-apply",
+      "label": "Route and path apply",
+      "description": "Route policy validation, route apply mode, path ownership, and route runtime apply failures.",
+      "defaultSeverity": "warning",
+      "primaryOwner": "Networking / Product",
+      "audience": "both",
+      "sources": ["gateway", "config", "audit"],
+      "relatedCodes": [
+        "ROUTE_POLICY_INVALID",
+        "ROUTE_APPLY_FAILED",
+        "ROUTE_OVERLAP",
+        "routing_apply_mode_off",
+        "routing_apply_mode_observe",
+        "routing_apply_mode_unknown"
+      ],
+      "symptoms": [
+        "Route changes do not affect traffic.",
+        "Gateway-daemon rejects routing desired state or reports overlapping CIDRs."
+      ],
+      "firstChecks": [
+        "Confirm ROUTING_APPLY_MODE and whether routes are expected to be live.",
+        "Inspect route ownership, destination CIDRs, and gateway assignment.",
+        "Review route mutation audit metadata for owner, actor, and scope."
+      ],
+      "remediation": [
+        "Fix invalid CIDRs or target assignment, then save and retry reconcile.",
+        "Move ROUTING_APPLY_MODE to apply only when route enforcement is intended.",
+        "Escalate ownership disputes to the route policy owner before forcing changes."
+      ],
+      "evidence": [
+        "Route ID, owner posture, apply mode, and failed gateway apply details.",
+        "Audit event for the most recent route mutation.",
+        "Gateway-daemon route apply log snippet with secrets removed."
+      ],
+      "userMessageGuidance": "Describe route policy as pending, disabled, or rejected; avoid claiming live traffic changes until runtime apply confirms them."
+    },
+    {
+      "id": "dns-resolution",
+      "label": "DNS resolution",
+      "description": "DNS policy validation, propagation, group disablement, and runtime DNS apply failures.",
+      "defaultSeverity": "warning",
+      "primaryOwner": "Networking / Runtime",
+      "audience": "both",
+      "sources": ["gateway", "gateway-manager", "config"],
+      "relatedCodes": [
+        "DNS_POLICY_INVALID",
+        "DNS_APPLY_FAILED",
+        "DNS_DISABLED_BY_GROUP",
+        "DNS_PROPAGATION_PENDING"
+      ],
+      "symptoms": [
+        "Managed names fail to resolve or DNS changes remain pending.",
+        "Gateway-daemon rejects DNS runtime state."
+      ],
+      "firstChecks": [
+        "Open DNS Zones, Nameservers, and Settings to verify desired records and disablement groups.",
+        "Check propagation status and gateway-daemon DNS apply logs.",
+        "Confirm whether the affected device or group is intentionally excluded."
+      ],
+      "remediation": [
+        "Correct invalid zone, nameserver, or match rules before retrying runtime refresh.",
+        "Remove disabled-management groups only when DNS should be managed for that scope.",
+        "Keep DNS and route remediation separate unless both incidents share the same gateway failure."
+      ],
+      "evidence": [
+        "Affected DNS zone, nameserver, group, and gateway scope.",
+        "DNS runtime apply status and sanitized error summary.",
+        "Recent DNS policy audit events."
+      ],
+      "userMessageGuidance": "Explain which DNS scope is affected and whether management is disabled or failing; do not expose internal resolver topology."
+    },
+    {
+      "id": "access-ownership",
+      "label": "Access and ownership",
+      "description": "RBAC, group access, route ownership, support-read, and privileged investigation boundaries.",
+      "defaultSeverity": "warning",
+      "primaryOwner": "Security / Product",
+      "audience": "platform",
+      "sources": ["audit", "dashboard", "control-plane"],
+      "relatedCodes": [
+        "audit_error_spike:access",
+        "audit_error_spike:route",
+        "support_read.denied",
+        "break_glass.denied"
+      ],
+      "symptoms": [
+        "Users cannot access an expected workspace, route, or operation.",
+        "Support or break-glass access is denied or requires review."
+      ],
+      "firstChecks": [
+        "Review backend effective-access explanation before trusting frontend state.",
+        "Check group membership, role assignment, support-read grant, and route owner posture.",
+        "Inspect audit events for denied permission, delegated actor, or break-glass context."
+      ],
+      "remediation": [
+        "Change access through guarded workspace/admin flows only.",
+        "Do not accept browser-supplied actor, owner, tenant, or delegated authority.",
+        "Escalate suspicious permission drift to Security before granting broad access."
+      ],
+      "evidence": [
+        "Effective access response, audit event ID, actor, workspace, and requested action.",
+        "Group and role assignment snapshot at the time of denial.",
+        "Support-read or break-glass approval context."
+      ],
+      "userMessageGuidance": "Keep customer messaging focused on access review or missing permission; do not disclose internal role names beyond the product role shown to the user."
+    },
+    {
+      "id": "audit-log-sink",
+      "label": "Audit and log sink",
+      "description": "Durable audit retention, audit export posture, and external log-sink delivery failures.",
+      "defaultSeverity": "warning",
+      "primaryOwner": "Platform Ops / Security",
+      "audience": "platform",
+      "sources": ["audit", "config"],
+      "relatedCodes": [
+        "audit_log_sink_delivery_failed",
+        "audit_error_spike:audit",
+        "status_source_failed"
+      ],
+      "symptoms": [
+        "External Elasticsearch/OpenSearch audit export is failing.",
+        "Audit failure spikes appear in operator status."
+      ],
+      "firstChecks": [
+        "Confirm Platform Audit still shows durable Nanami audit events.",
+        "Open Company Settings and inspect log-sink delivery status, credential reference, and endpoint.",
+        "Check whether delivery errors are retryable and when the last attempt happened."
+      ],
+      "remediation": [
+        "Restore endpoint reachability, index permissions, or credential reference.",
+        "Retry external export only after confirming durable audit events remain intact.",
+        "Do not rotate or print raw sink credentials during incident response."
+      ],
+      "evidence": [
+        "Delivery status, retryable flag, last attempt timestamp, and redacted error summary.",
+        "Platform Audit query showing durable event availability.",
+        "Operator change audit for log-sink settings."
+      ],
+      "userMessageGuidance": "State that external audit export is delayed while durable audit records remain stored in Nanami."
+    },
+    {
+      "id": "connector-integration",
+      "label": "Connector and integration",
+      "description": "Connector lifecycle metadata, first-wave availability, and unsupported connector posture.",
+      "defaultSeverity": "info",
+      "primaryOwner": "Product Integrations",
+      "audience": "platform",
+      "sources": ["dashboard", "config", "audit"],
+      "relatedCodes": [
+        "connector_not_supported",
+        "connector_lifecycle_unknown",
+        "audit_error_spike:connector"
+      ],
+      "symptoms": [
+        "Operator expects a connector that is not in the shipped first wave.",
+        "Connector lifecycle or integration status is unclear."
+      ],
+      "firstChecks": [
+        "Check connector lifecycle metadata and managed-in surface.",
+        "Confirm the connector is part of current release scope before promising availability.",
+        "Review settings mutation audit for rejected or unsupported connector changes."
+      ],
+      "remediation": [
+        "Keep unsupported connectors as roadmap, not partially enabled runtime claims.",
+        "Update operator-facing copy only when a connector has a real lifecycle and management surface.",
+        "Escalate scope changes to Product Integrations."
+      ],
+      "evidence": [
+        "Connector ID, lifecycle state, managed-in surface, and settings audit event.",
+        "First-wave connector contract output.",
+        "Operator request or integration support ticket."
+      ],
+      "userMessageGuidance": "Use availability language only for shipped connectors; do not imply unsupported connectors are configured or live."
+    },
+    {
+      "id": "control-plane-availability",
+      "label": "Control-plane availability",
+      "description": "Control-plane status source failures, backend unavailable snapshots, and platform/system status source gaps.",
+      "defaultSeverity": "critical",
+      "primaryOwner": "Platform Ops",
+      "audience": "both",
+      "sources": ["control-plane", "dashboard", "unknown"],
+      "relatedCodes": [
+        "status_source_failed",
+        "platform_status_backend_unavailable",
+        "system_config_unavailable"
+      ],
+      "symptoms": [
+        "Status cannot load live control-plane or aggregate sources.",
+        "Dashboard uses a stale snapshot or cannot determine source health."
+      ],
+      "firstChecks": [
+        "Check control-plane health, database reachability, and BFF upstream configuration.",
+        "Identify which source failed before declaring the whole platform unavailable.",
+        "Confirm whether a stale snapshot is being shown and when it was generated."
+      ],
+      "remediation": [
+        "Restore control-plane or source dependency reachability.",
+        "Keep unavailable sources visible instead of flattening them into healthy status.",
+        "Use the degraded/unavailable source message as the public-safe status basis."
+      ],
+      "evidence": [
+        "Failed source name, normalized error, request ID, and generatedAt timestamp.",
+        "Control-plane logs and database health checks.",
+        "Dashboard BFF upstream configuration snapshot."
+      ],
+      "userMessageGuidance": "Say that status data is currently unavailable or stale; do not claim no incidents when sources failed."
+    },
+    {
+      "id": "deployment-config-secrets",
+      "label": "Deployment, config, and secrets",
+      "description": "Deploy preflight, runtime secret validation, internal mTLS, and key material misconfiguration.",
+      "defaultSeverity": "critical",
+      "primaryOwner": "Release Engineering / Security",
+      "audience": "platform",
+      "sources": ["config", "control-plane", "audit"],
+      "relatedCodes": [
+        "internal_mtls_cert_bundle_invalid",
+        "secret_material_invalid",
+        "deploy_config_preflight_failed",
+        "status_source_failed"
+      ],
+      "symptoms": [
+        "Deploy or startup fails due to missing, placeholder, weak, or malformed key material.",
+        "Internal mTLS or runtime secret validation blocks service startup."
+      ],
+      "firstChecks": [
+        "Run the relevant deploy/config preflight and runtime secret boundary guard.",
+        "Confirm operator-managed env files contain real secrets and tracked examples contain placeholders only.",
+        "Check internal mTLS certificate validity and service identity expectations."
+      ],
+      "remediation": [
+        "Generate or rotate the missing operator-managed secret without printing it in logs.",
+        "Preserve existing non-placeholder keys unless an explicit rotation plan exists.",
+        "Restart affected services only after config validation passes."
+      ],
+      "evidence": [
+        "Preflight failure line, affected env key name, and service name.",
+        "Runtime secret boundary guard output.",
+        "Change record for key generation or rotation."
+      ],
+      "userMessageGuidance": "Avoid exposing secret values; mention only the affected configuration class and remediation owner."
+    },
+    {
+      "id": "public-distribution-install",
+      "label": "Public distribution and install",
+      "description": "Community public distribution, install channel availability, docs truth, and release gate posture.",
+      "defaultSeverity": "warning",
+      "primaryOwner": "Release / Product",
+      "audience": "both",
+      "sources": ["config", "dashboard", "audit"],
+      "relatedCodes": [
+        "community_distribution_unavailable",
+        "public_install_channel_blocked",
+        "audit_error_spike:distribution"
+      ],
+      "symptoms": [
+        "Community public install path is referenced before anonymous distribution is actually available.",
+        "Docs, deploy, or release checks disagree about current public availability."
+      ],
+      "firstChecks": [
+        "Confirm the real anonymous public GitHub/GHCR or release-bundle channel state.",
+        "Run the Community distribution contract and public content boundary checks.",
+        "Check whether Product explicitly deferred public distribution from release scope."
+      ],
+      "remediation": [
+        "Keep docs aligned with actual availability until the public channel is real.",
+        "Do not close the distribution blocker unless anonymous install/pull works or Product defers it.",
+        "Update release notes and operator guidance only after the channel decision is final."
+      ],
+      "evidence": [
+        "Public channel test result and failing/passing command output.",
+        "Docs/public content boundary output.",
+        "Product decision record for release inclusion or deferral."
+      ],
+      "userMessageGuidance": "Be explicit about availability: do not imply public install works until the channel is truly open."
+    }
+  ]
+}
